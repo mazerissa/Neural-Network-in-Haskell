@@ -1,61 +1,54 @@
-import System.Random (newStdGen, randomRs)
+import Graphics.Gloss
+import NeuralNet
 
-data Layer = Layer { weights :: [[Double]], biases :: [Double] } deriving (Show)
-type Network = [Layer]
+nodeRadius = 15
+layerGap   = 160
+nodeGap    = 40
+screenOff  = -320 
 
-sigmoid x = 1 / (1 + exp (-x))
-sigmoid' x = let s = sigmoid x in s * (1 - s)
-dotProduct xs ys = sum $ zipWith (*) xs ys
+xorData = [ ([0,0], [0]), ([0,1], [1]), ([1,0], [1]), ([1,1], [0]) ]
+learningRate = 0.5
 
-createRandomNetwork dims = do
-    gen <- newStdGen
-    let randoms = randomRs (-1.0, 1.0) gen
-    return $ construct (length dims - 1) dims randoms
-  where
-    construct 0 _ _ = []
-    construct n (i:j:rest) rs =
-        let (wCount, bCount) = (j * i, j)
-            (wRs, restRs) = splitAt wCount rs
-            (bRs, finalRs) = splitAt bCount restRs
-            -- Scale weights by 1/sqrt(inputs) to prevent vanishing gradients
-            scale = sqrt (1.0 / fromIntegral i)
-            ws = chunk i (map (* scale) wRs)
-            layer = Layer ws (map (* 0) bRs)
-        in layer : construct (n-1) (j:rest) finalRs
-    chunk _ [] = []
-    chunk n xs = let (yh, yt) = splitAt n xs in yh : chunk n yt
+weightColor w = 
+    let intensity = realToFrac (min 1.0 (abs w))
+    in if w > 0 
+       then mixColors intensity (1 - intensity) cyan (greyN 0.1)
+       else mixColors intensity (1 - intensity) orange (greyN 0.1)
 
-forward input [] = [input]
-forward input (l:ls) = 
-    let next = zipWith (\w b -> sigmoid (dotProduct w input + b)) (weights l) (biases l)
-    in input : forward next ls
+getPos lIdx nIdx totalNodes = 
+    ( fromIntegral lIdx * layerGap + screenOff
+    , fromIntegral nIdx * nodeGap - (fromIntegral totalNodes * nodeGap / 2)
+    )
 
-backprop activations target network = 
-    let revActs = reverse activations
-        revNet  = reverse network
-        outDelta = zipWith (*) (zipWith (-) (head revActs) target) (map sigmoid' (head revActs))
-        allDeltas = scanl calculateHiddenDelta outDelta (zip revNet (tail revActs))
-        calculateHiddenDelta nextDelta (Layer w _, act) =
-            let errors = [dotProduct (map (!! i) w) nextDelta | i <- [0..length act - 1]]
-            in zipWith (*) errors (map sigmoid' act)
-        grads = zipWith (\act d -> Layer [[d' * a | a <- act] | d' <- d] d) (tail revActs) allDeltas
-    in reverse grads
+drawConnections lIdx layer prevTotal =
+    let nextTotal = length (biases layer)
+    in pictures [ 
+        let w = (weights layer !! j) !! i
+            (x1, y1) = getPos lIdx i prevTotal
+            (x2, y2) = getPos (lIdx+1) j nextTotal
+        in color (weightColor w) $ line [(x1, y1), (x2, y2)]
+        | i <- [0..prevTotal-1], j <- [0..nextTotal-1] 
+    ]
 
-updateLayer lr (Layer w b) (Layer gw gb) =
-    Layer (zipWith (zipWith (\w' g -> w' - lr * g)) w gw)
-          (zipWith (\b' g -> b' - lr * g) b gb)
+render net = 
+    let architecture = [2, 8, 8, 4, 1]
+        prevLayerCounts = init architecture 
+        netColors = pictures $ zipWith3 drawConnections [0..] net prevLayerCounts
+        nodes = pictures $ zipWith (\l t -> pictures [ translate x y $ color white (circleSolid nodeRadius) 
+                                                     | i <- [0..t-1], let (x, y) = getPos l i t ]) [0..] architecture
+    in pictures [netColors, nodes]
 
-trainStep lr input target net =
-    let activations = forward input net
-        gradients = backprop activations target net
-    in zipWith (updateLayer lr) net gradients
+update _ _ net = 
+    iterate (trainDataset learningRate xorData) net !! 10
 
-trainDataset lr dataset net = foldl (\n (i, t) -> trainStep lr i t n) net dataset
-
+main :: IO ()
 main = do
-    let architecture = [2, 8, 8, 1] 
-    net <- createRandomNetwork architecture
-    let xorData = [ ([0,0], [0]), ([0,1], [1]), ([1,0], [1]), ([1,1], [0]) ]
-    let trainedNet = iterate (trainDataset 0.5 xorData) net !! 20000
-    putStrLn "XOR Results:"
-    mapM_ (\(inp, _) -> print (inp, last (forward inp trainedNet))) xorData
+    initialNet <- createRandomNetwork [2, 8, 8, 4, 1]
+    
+    simulate 
+        (InWindow "Neural Network In Haskell" (800, 600) (100, 100))
+        black        
+        60           
+        initialNet   
+        render      
+        update       
