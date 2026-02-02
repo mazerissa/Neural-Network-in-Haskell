@@ -66,11 +66,16 @@ ghc -O2 Main.hs -o main
 
 > [!TIP] Running on a potato? If your FPS stutters, open ``Main.hs``, find the ``step`` function, and change the training iterations from ``!! 10`` to ``!! 5``. Your CPU will thank you.
 
+
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please read our [Code of Conduct](https://github.com/mazerissa/Neural-Network-in-Haskell?tab=coc-ov-file) before getting started.
+Love this project? Whether it's fixing a bug or adding a new "brain" feature, your help is welcome! 
+
+1. Check out the [Contributing Guidelines](https://github.com/mazerissa/Neural-Network-in-Haskell?tab=contributing-ov-file).
+2. Read the [Code of Conduct](https://github.com/mazerissa/Neural-Network-in-Haskell?tab=coc-ov-file).
+3. Fork it and submit a PR!
 
 ---
 
