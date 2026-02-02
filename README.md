@@ -68,6 +68,13 @@ ghc -O2 Main.hs -o main
 
 ---
 
+## 🤝 Contributing
+
+Contributions are welcome! Please read our [Code of Conduct](https://github.com/mazerissa/Neural-Network-in-Haskell?tab=coc-ov-file) before getting started.
+
+---
+
+
 ## ⚖️ License & Disclaimer
 
 Built for educational purposes. This is a "vanilla" implementation—no heavy ML frameworks, no TensorFlow, no PyTorch. Just raw Haskell and pure math.
