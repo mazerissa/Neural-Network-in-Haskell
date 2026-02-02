@@ -38,11 +38,17 @@ $$Output = \sigma(\sum(Input \cdot Weight) + Bias)$$
 
 ```text
 .
+├── .github/
+│   └── PULL_REQUEST_TEMPLATE.md
 ├── Assets/           
 │   └── NeuralNetwork.gif
+├── .gitignore        
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md      
+├── LICENSE           
+├── SECURITY.md          
 ├── Main.hs           
 ├── NeuralNet.hs      
-├── .gitignore        
 └── README.md
 ```
 
@@ -79,6 +85,11 @@ Love this project? Whether it's fixing a bug or adding a new "brain" feature, yo
 
 ---
 
+## 🛡️ Security
+
+If you discover any security-related issues, please review our [Security Policy](https://github.com/mazerissa/Neural-Network-in-Haskell/tree/main?tab=security-ov-file).
+
+---
 
 ## ⚖️ License & Disclaimer
 
