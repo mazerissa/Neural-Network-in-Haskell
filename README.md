@@ -1,4 +1,4 @@
-# 🧠 XOR-Brain: 5-Layer Neural Network
+# 🧠 5-Layer Neural Network
 ### *Deep Learning from Scratch, Visualized in Haskell*
 
 <p align="center">
