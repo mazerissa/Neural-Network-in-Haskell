@@ -71,7 +71,8 @@ ghc -O2 Main.hs -o main
 ## ⚖️ License & Disclaimer
 
 Built for educational purposes. This is a "vanilla" implementation—no heavy ML frameworks, no TensorFlow, no PyTorch. Just raw Haskell and pure math.
-his project is licensed under the MIT License - see the [LICENSE](https://github.com/mazerissa/Neural-Network-in-Haskell?tab=MIT-1-ov-file) file for details.
+
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/mazerissa/Neural-Network-in-Haskell?tab=MIT-1-ov-file) file for details.
 
 ---
 
