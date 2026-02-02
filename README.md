@@ -64,7 +64,7 @@ ghc -O2 Main.hs -o main
 ./main
 ```
 
-[!TIP] Running on a potato? If your FPS stutters, open ``Main.hs``, find the ``step`` function, and change the training iterations from ``!! 10`` to ``!! 5``. Your CPU will thank you.
+> [!TIP] Running on a potato? If your FPS stutters, open ``Main.hs``, find the ``step`` function, and change the training iterations from ``!! 10`` to ``!! 5``. Your CPU will thank you.
 
 ---
 
