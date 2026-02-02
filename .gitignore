@@ -1,0 +1,9 @@
+dist-newstyle/
+.DS_Store
+.vscode/
+*.o
+*.hi
+*.dyn_o
+*.dyn_hi
+Main
+Main.exe
